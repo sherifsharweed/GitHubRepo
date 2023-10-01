@@ -2,6 +2,7 @@ package com.example.githubrepo.ui.screens.main.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,13 +29,24 @@ import com.example.githubrepo.data.models.RepoResponse
 
 
 @Composable
-fun ReposList(data: List<RepoResponse>, onItemSelect: (String?, String?) -> Unit) {
-    LazyColumn {
-        items(data.size) { index ->
-            SingleRepoItem(data[index], onItemSelect)
-            Divider(Modifier.padding(vertical = 8.dp))
+fun ReposList(
+    data: List<RepoResponse>,
+    modifier: Modifier,
+    onItemSelect: (String?, String?) -> Unit
+) {
+    Box(modifier = modifier) {
+        Column() {
+            SearchAppBar(text = "", onTextChange = {}, onSearchClicked = {}) {
+            }
+            LazyColumn(modifier = Modifier.padding(top= 4.dp)) {
+                items(data.size) { index ->
+                    SingleRepoItem(data[index], onItemSelect)
+                    Divider(Modifier.padding(vertical = 8.dp))
+                }
+            }
         }
     }
+
 }
 
 @Composable
@@ -57,11 +70,23 @@ fun SingleRepoItem(repoItem: RepoResponse, onItemSelect: (String?, String?) -> U
         )
         Column(
             Modifier.padding(start = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(7.dp)
+            verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            Text(text = repoItem.name ?: "", maxLines = 1)
-            Text(text = repoItem.owner?.login ?: "", maxLines = 1)
-            Text(text = repoItem.description ?: "", maxLines = 3)
+            Text(
+                text = repoItem.name ?: "",
+                maxLines = 1,
+                style = MaterialTheme.typography.headlineLarge
+            )
+            Text(
+                text = repoItem.owner?.login ?: "",
+                maxLines = 1,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = repoItem.description ?: "",
+                maxLines = 3,
+                style = MaterialTheme.typography.displaySmall
+            )
         }
     }
 }

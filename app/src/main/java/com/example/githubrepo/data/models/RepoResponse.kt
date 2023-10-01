@@ -36,6 +36,5 @@ data class RepoResponse(
 data class Owner(
     @SerializedName("login") var login: String? = null,
     @SerializedName("id") var id: Int? = null,
-    @SerializedName("node_id") var nodeId: String? = null,
     @SerializedName("avatar_url") var avatarUrl: String? = null,
 )

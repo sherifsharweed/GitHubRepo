@@ -1,5 +1,6 @@
 package com.example.githubrepo.data.repos
 
+import com.example.githubrepo.data.models.IssueResponse
 import com.example.githubrepo.data.models.RepoResponse
 import com.example.githubrepo.data.models.SingleRepoInfo
 import com.example.githubrepo.data.remote.RemoteDataSource
@@ -30,6 +31,20 @@ class ReposRepoImpl @Inject constructor(private val remoteDataSource: RemoteData
         return flow {
             emit(DataStatus.loading())
             val response = remoteDataSource.getSingleRepoInfo(repoName, authorName)
+            if (response.isSuccessful) emit(DataStatus.success(response.body()))
+            else emit(DataStatus.error(response.message()))
+        }.catch {
+            emit(DataStatus.error(it.message))
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override suspend fun getRepoIssues(
+        repoName: String,
+        authorName: String
+    ): Flow<DataStatus<List<IssueResponse>>> {
+        return flow {
+            emit(DataStatus.loading())
+            val response = remoteDataSource.getRepoIssues(repoName, authorName)
             if (response.isSuccessful) emit(DataStatus.success(response.body()))
             else emit(DataStatus.error(response.message()))
         }.catch {

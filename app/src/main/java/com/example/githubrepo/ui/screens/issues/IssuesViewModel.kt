@@ -1,9 +1,9 @@
-package com.example.githubrepo.ui.screens.details
+package com.example.githubrepo.ui.screens.issues
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.githubrepo.data.models.SingleRepoInfo
+import com.example.githubrepo.data.models.IssueResponse
 import com.example.githubrepo.data.repos.ReposRepo
 import com.example.githubrepo.ui.utils.DataStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,16 +13,16 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailsViewMode @Inject constructor(private val reposRepo: ReposRepo) : ViewModel() {
+class IssuesViewModel @Inject constructor(private val reposRepo: ReposRepo) : ViewModel() {
 
-    val state = mutableStateOf<DataStatus<SingleRepoInfo>>(DataStatus.loading())
+    val state = mutableStateOf<DataStatus<List<IssueResponse>>>(DataStatus.loading())
 
-    fun getRepoInfo(repoName: String?, authorName: String?) {
+    fun getRepoIssues(repoName: String?, authorName: String?) {
         repoName?.let {
             authorName?.let {
                 viewModelScope.launch {
                     withContext(Dispatchers.IO) {
-                        reposRepo.getSingleRepoInfo(repoName, authorName).collect {
+                        reposRepo.getRepoIssues(repoName, authorName).collect {
                             withContext(Dispatchers.Main) {
                                 state.value = it
                             }
@@ -31,8 +31,5 @@ class DetailsViewMode @Inject constructor(private val reposRepo: ReposRepo) : Vi
                 }
             }
         }
-    }
-    fun passErrorToState(string: String) {
-        state.value = DataStatus.error(string)
     }
 }

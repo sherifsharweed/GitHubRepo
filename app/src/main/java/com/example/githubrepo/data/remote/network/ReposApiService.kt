@@ -1,5 +1,6 @@
 package com.example.githubrepo.data.remote.network
 
+import com.example.githubrepo.data.models.IssueResponse
 import com.example.githubrepo.data.models.RepoResponse
 import com.example.githubrepo.data.models.SingleRepoInfo
 import retrofit2.Response
@@ -13,4 +14,8 @@ interface ReposApiService {
 
     @GET(SINGLE_REPO_INFO)
     suspend fun getSingleRepoInfo(@Path("repo_name")repoName: String,@Path("author_name") authorName:String): Response<SingleRepoInfo>
+
+    @GET(ISSUES)
+    suspend fun getRepoIssues(@Path("repo_name")repoName: String,@Path("author_name") authorName:String): Response<List<IssueResponse>>
+
 }

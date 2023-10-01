@@ -1,6 +1,8 @@
 package com.example.githubrepo.ui.screens.main
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.githubrepo.data.models.RepoResponse
@@ -16,6 +18,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(private val reposRepo: ReposRepo) : ViewModel() {
 
     val state = mutableStateOf<DataStatus<List<RepoResponse>>>(DataStatus.loading())
+    var searchTextState by mutableStateOf("")
+
 
     init {
         getRepoList()
@@ -32,4 +36,19 @@ class MainViewModel @Inject constructor(private val reposRepo: ReposRepo) : View
             }
         }
     }
+
+    private fun updateSearchText(text: String) {
+        searchTextState = text
+    }
+
+    private fun onSearchRepos(text: String) {
+        viewModelScope.launch {
+
+        }
+    }
+
+    fun passErrorToState(string: String) {
+        state.value = DataStatus.error(string)
+    }
+
 }
