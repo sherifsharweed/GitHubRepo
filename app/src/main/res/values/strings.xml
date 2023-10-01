@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">GitHubRepo</string>
+    <string name="title_activity_details">DetailsActivity</string>
+    <string name="repo_image">RepoImage</string>
 </resources>

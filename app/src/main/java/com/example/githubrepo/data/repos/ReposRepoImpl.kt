@@ -1,6 +1,7 @@
 package com.example.githubrepo.data.repos
 
 import com.example.githubrepo.data.models.RepoResponse
+import com.example.githubrepo.data.models.SingleRepoInfo
 import com.example.githubrepo.data.remote.RemoteDataSource
 import com.example.githubrepo.ui.utils.DataStatus
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +19,18 @@ class ReposRepoImpl @Inject constructor(private val remoteDataSource: RemoteData
             emit(DataStatus.loading())
             val response = remoteDataSource.getAllRepos()
             if (response.isSuccessful) emit(DataStatus.success(response.body()?.toList()))
+            else emit(DataStatus.error(response.message()))
+        }.catch {
+            emit(DataStatus.error(it.message))
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override suspend fun getSingleRepoInfo(repoName: String, authorName: String)
+            : Flow<DataStatus<SingleRepoInfo>> {
+        return flow {
+            emit(DataStatus.loading())
+            val response = remoteDataSource.getSingleRepoInfo(repoName, authorName)
+            if (response.isSuccessful) emit(DataStatus.success(response.body()))
             else emit(DataStatus.error(response.message()))
         }.catch {
             emit(DataStatus.error(it.message))

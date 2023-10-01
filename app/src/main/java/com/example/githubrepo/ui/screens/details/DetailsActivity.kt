@@ -1,6 +1,5 @@
-package com.example.githubrepo.ui.screens.main
+package com.example.githubrepo.ui.screens.details
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,12 +9,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat.startActivity
 import com.example.githubrepo.consts.AUTHOR_NAME
 import com.example.githubrepo.consts.REPO_NAME
-import com.example.githubrepo.ui.screens.details.DetailsActivity
-import com.example.githubrepo.ui.screens.main.components.ReposList
+import com.example.githubrepo.ui.screens.details.components.DetailsOfSingleRepo
 import com.example.githubrepo.ui.theme.GitHubRepoTheme
 import com.example.githubrepo.ui.utils.LoadingBar
 import com.example.githubrepo.ui.utils.ShowToast
@@ -23,43 +19,40 @@ import com.example.githubrepo.ui.utils.Status
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
-    private val viewModel by viewModels<MainViewModel>()
+class DetailsActivity : ComponentActivity() {
+    private val viewModel by viewModels<DetailsViewMode>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val repoName = intent.getStringExtra(REPO_NAME)
+        val authorName = intent.getStringExtra(AUTHOR_NAME)
+        viewModel.getRepoInfo(repoName,authorName)
         setContent {
             GitHubRepoTheme {
-                MainScreen(viewModel)
+                DetailsScreen(viewModel)
             }
         }
     }
 }
 
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
+fun DetailsScreen(viewModel: DetailsViewMode) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        MainScreenContent(viewModel)
+        DetailsScreenContent(viewModel)
     }
 }
 
 @Composable
-fun MainScreenContent(viewModel: MainViewModel) {
-    val context = LocalContext.current
+fun DetailsScreenContent(viewModel: DetailsViewMode) {
     viewModel.state.value.let {
         when (it.status) {
             Status.LOADING -> LoadingBar()
-            Status.SUCCESS -> ReposList(it.data ?: emptyList()) { name, author ->
-                val intent = Intent(context, DetailsActivity::class.java)
-                intent.putExtra(REPO_NAME, name)
-                intent.putExtra(AUTHOR_NAME, author)
-                startActivity(context, intent, null)
-            }
-
+            Status.SUCCESS -> DetailsOfSingleRepo(it.data)
             Status.FAILURE -> ShowToast(it.message)
         }
     }
 }
+
