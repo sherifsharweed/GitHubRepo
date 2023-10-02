@@ -27,13 +27,12 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.githubrepo.R
-import com.example.githubrepo.data.models.Owner
-import com.example.githubrepo.data.models.RepoResponse
+import com.example.githubrepo.data.models.GitRepoDetails
 
 
 @Composable
 fun ReposList(
-    data: List<RepoResponse>,
+    data: List<GitRepoDetails>,
     onItemSelect: (String?, String?) -> Unit
 ) {
     if (data.isNotEmpty()) {
@@ -56,16 +55,16 @@ fun ReposList(
 }
 
 @Composable
-fun SingleRepoItem(repoItem: RepoResponse, onItemSelect: (String?, String?) -> Unit) {
+fun SingleRepoItem(repoItem: GitRepoDetails, onItemSelect: (String?, String?) -> Unit) {
     Row(
         Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp)
-            .clickable(onClick = { onItemSelect(repoItem.name, repoItem.owner?.login) }),
+            .clickable(onClick = { onItemSelect(repoItem.name, repoItem.author) }),
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(repoItem.owner?.avatarUrl ?: "")
+                .data(repoItem.avatarUrl)
                 .crossfade(true)
                 .build(),
             contentDescription = stringResource(R.string.repo_image),
@@ -79,21 +78,21 @@ fun SingleRepoItem(repoItem: RepoResponse, onItemSelect: (String?, String?) -> U
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             Text(
-                text = repoItem.name ?: "",
+                text = repoItem.name,
                 maxLines = 1,
                 style = MaterialTheme.typography.headlineLarge
             )
             Text(
-                text = repoItem.owner?.login ?: "",
+                text = repoItem.author,
                 maxLines = 1,
                 style = MaterialTheme.typography.bodyLarge
             )
             Text(
-                text = repoItem.description ?: "",
+                text = repoItem.description,
                 maxLines = 3,
                 style = MaterialTheme.typography.displaySmall
             )
-            repoItem.stargazersCount?.toString()?.let { starCount ->
+            repoItem.stars?.toString()?.let { starCount ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,
@@ -116,12 +115,11 @@ fun SingleRepoItem(repoItem: RepoResponse, onItemSelect: (String?, String?) -> U
 @Composable
 fun PreviewItem() {
     SingleRepoItem(
-        repoItem = RepoResponse(
+        repoItem = GitRepoDetails(
             name = "sesqdre",
-            owner = Owner(
-                login = "sfadfasdf",
-                avatarUrl = "https://avatars.githubusercontent.com/u/81463583?v=4"
-            ),
+            author = "sfadfasdf",
+            avatarUrl = "https://avatars.githubusercontent.com/u/81463583?v=4",
+            stars = null,
             description = "QWNDIFCUJWNMDCU9WIENWIECNWFCQWNDIFCUJWNMDCU9WIENWIECNWFCQWNDIFCUJWNMDCU9WIENWIECNWFCQWNDIFCUJWNMDCU9WIENWIECNWFCQWNDIFCUJWNMDCU9WIENWIECNWFCQWNDIFCUJWNMDCU9WIENWIECNWFCQWNDIFCUJWNMDCU9WIENWIECNWFC"
         )
     ) { name, aithor ->

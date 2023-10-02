@@ -1,5 +1,8 @@
 package com.example.githubrepo.di
 
+import com.example.githubrepo.data.local.LocalDataSource
+import com.example.githubrepo.data.local.ReposLocalDataSource
+import com.example.githubrepo.data.local.dao.AppDataBase
 import com.example.githubrepo.data.remote.RemoteDataSource
 import com.example.githubrepo.data.remote.ReposRemoteDataSource
 import com.example.githubrepo.data.remote.network.ReposApiService
@@ -17,5 +20,12 @@ object DataSource {
         reposApiService: ReposApiService,
     ): RemoteDataSource {
         return ReposRemoteDataSource(reposApiService)
+    }
+
+    @Provides
+    fun provideLocalDataSource(
+        appDataBase: AppDataBase,
+    ): LocalDataSource {
+        return ReposLocalDataSource(appDataBase)
     }
 }

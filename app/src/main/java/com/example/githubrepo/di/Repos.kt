@@ -1,5 +1,6 @@
 package com.example.githubrepo.di
 
+import com.example.githubrepo.data.local.LocalDataSource
 import com.example.githubrepo.data.remote.RemoteDataSource
 import com.example.githubrepo.data.repos.ReposRepo
 import com.example.githubrepo.data.repos.ReposRepoImpl
@@ -14,7 +15,8 @@ object Repos {
     @Provides
     fun provideNewsRepo(
         remoteDataSource: RemoteDataSource,
+        localDataSource: LocalDataSource
     ): ReposRepo {
-        return ReposRepoImpl(remoteDataSource)
+        return ReposRepoImpl(remoteDataSource,localDataSource)
     }
 }

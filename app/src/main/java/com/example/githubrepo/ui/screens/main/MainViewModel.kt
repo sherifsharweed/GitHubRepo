@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.githubrepo.data.models.RepoResponse
+import com.example.githubrepo.data.models.GitRepoDetails
 import com.example.githubrepo.data.repos.ReposRepo
 import com.example.githubrepo.ui.utils.DataStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(private val reposRepo: ReposRepo) : ViewModel() {
 
-    val state = mutableStateOf<DataStatus<List<RepoResponse>>>(DataStatus.loading())
+    val state = mutableStateOf<DataStatus<List<GitRepoDetails>>>(DataStatus.loading())
     var searchTextState by mutableStateOf("")
 
     init {
@@ -28,6 +28,7 @@ class MainViewModel @Inject constructor(private val reposRepo: ReposRepo) : View
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 reposRepo.getAllRepos().collect {
+
                     withContext(Dispatchers.Main) {
                         state.value = it
                     }
