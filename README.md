@@ -6,11 +6,11 @@
 
 An application for GitHub Repositories :
 
-1- First screen is the main screen for highlighte repositories, has a list of repositories item (title, author, avatar, description) with horizontal scroll view .
+1- First screen is the main screen for repositories, has a list of repository item (title, author, avatar, description) with horizontal scroll view .
 
-2- User can click on any item of repository, then it'll redirect to the details screen.
+2- User can click on any item, then it'll redirect to the details screen.
 
-3- User can see the details of any repository in the second screen (title,author,description,language,stars,rate,button to hit the issues list).
+3- User can see the details of choosen repository in the second screen (title,author,description,language,stars,rate,button to hit the issues list).
 
 4- User can see the list of issues in the issue screen and each item has data about title, author,state and date of the issue.
 
