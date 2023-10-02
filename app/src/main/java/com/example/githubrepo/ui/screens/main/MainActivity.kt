@@ -5,21 +5,21 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import com.example.githubrepo.R
 import com.example.githubrepo.ui.screens.details.DetailsActivity
 import com.example.githubrepo.ui.screens.main.components.ReposList
+import com.example.githubrepo.ui.screens.main.components.SearchAppBar
 import com.example.githubrepo.ui.theme.GitHubRepoTheme
 import com.example.githubrepo.ui.utils.LoadingBar
 import com.example.githubrepo.ui.utils.ShowToast
@@ -54,31 +54,32 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.app_name),
-                        maxLines = 1,
-                        style = MaterialTheme.typography.headlineLarge
+    Scaffold(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.padding(it)) {
+            Column {
+                Box(modifier = Modifier.padding(horizontal = 8.dp, vertical = 10.dp)) {
+                    SearchAppBar(
+                        text = viewModel.searchTextState,
+                        onTextChange = viewModel::updateSearchText,
+                        onSearchClicked = viewModel::onSearchRepos,
+                        onCloseSearch = viewModel::onClearSearch
                     )
-                },
-            )
-        },
-        modifier = Modifier.fillMaxSize(),
-    ) {
-        MainScreenContent(viewModel, Modifier.padding(it))
+                }
+                MainScreenContent(viewModel)
+            }
+        }
     }
 }
 
 @Composable
-fun MainScreenContent(viewModel: MainViewModel, modifier: Modifier) {
+fun MainScreenContent(viewModel: MainViewModel) {
     val context = LocalContext.current
-    viewModel.state.value.let {
+    viewModel.state.value.let { it ->
         when (it.status) {
             Status.LOADING -> LoadingBar()
-            Status.SUCCESS -> ReposList(it.data ?: emptyList(), modifier) { name, author ->
+            Status.SUCCESS -> ReposList(
+                it.data ?: emptyList(),
+            ) { name, author ->
                 val intent = Intent(context, DetailsActivity::class.java)
                 intent.putExtra(REPO_NAME, name)
                 intent.putExtra(AUTHOR_NAME, author)

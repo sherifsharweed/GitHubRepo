@@ -37,18 +37,29 @@ class MainViewModel @Inject constructor(private val reposRepo: ReposRepo) : View
         }
     }
 
-    private fun updateSearchText(text: String) {
+    fun updateSearchText(text: String) {
         searchTextState = text
     }
 
-    private fun onSearchRepos(text: String) {
+    fun onSearchRepos(text: String) {
         viewModelScope.launch {
-
+            withContext(Dispatchers.IO) {
+                reposRepo.getSearchedRepos(text).collect {
+                    withContext(Dispatchers.Main) {
+                        state.value = it
+                    }
+                }
+            }
         }
     }
 
     fun passErrorToState(string: String) {
         state.value = DataStatus.error(string)
+    }
+
+    fun onClearSearch() {
+        searchTextState = ""
+        getRepoList()
     }
 
 }

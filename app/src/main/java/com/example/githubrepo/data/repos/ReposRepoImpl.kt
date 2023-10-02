@@ -51,4 +51,15 @@ class ReposRepoImpl @Inject constructor(private val remoteDataSource: RemoteData
             emit(DataStatus.error(it.message))
         }.flowOn(Dispatchers.IO)
     }
+
+    override suspend fun getSearchedRepos(text: String): Flow<DataStatus<List<RepoResponse>>> {
+        return flow {
+            emit(DataStatus.loading())
+            val response = remoteDataSource.getSearchedRepos(text)
+            if (response.isSuccessful) emit(DataStatus.success(response.body()?.items))
+            else emit(DataStatus.error(response.message()))
+        }.catch {
+            emit(DataStatus.error(it.message))
+        }.flowOn(Dispatchers.IO)
+    }
 }

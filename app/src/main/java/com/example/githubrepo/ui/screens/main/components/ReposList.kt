@@ -1,8 +1,8 @@
 package com.example.githubrepo.ui.screens.main.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,10 +14,12 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,22 +33,14 @@ import com.example.githubrepo.data.models.RepoResponse
 @Composable
 fun ReposList(
     data: List<RepoResponse>,
-    modifier: Modifier,
     onItemSelect: (String?, String?) -> Unit
 ) {
-    Box(modifier = modifier) {
-        Column() {
-            SearchAppBar(text = "", onTextChange = {}, onSearchClicked = {}) {
-            }
-            LazyColumn(modifier = Modifier.padding(top= 4.dp)) {
-                items(data.size) { index ->
-                    SingleRepoItem(data[index], onItemSelect)
-                    Divider(Modifier.padding(vertical = 8.dp))
-                }
-            }
+    LazyColumn(modifier = Modifier.padding(top = 4.dp)) {
+        items(data.size) { index ->
+            SingleRepoItem(data[index], onItemSelect)
+            Divider(Modifier.padding(vertical = 8.dp))
         }
     }
-
 }
 
 @Composable
@@ -87,6 +81,21 @@ fun SingleRepoItem(repoItem: RepoResponse, onItemSelect: (String?, String?) -> U
                 maxLines = 3,
                 style = MaterialTheme.typography.displaySmall
             )
+            repoItem.stargazersCount?.toString()?.let { starCount ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    Image(
+                        painter = painterResource(id = R.drawable.baseline_star_24),
+                        contentDescription = "Score"
+                    )
+                    Text(text = starCount, style = MaterialTheme.typography.displayLarge)
+
+                }
+            }
         }
     }
 }

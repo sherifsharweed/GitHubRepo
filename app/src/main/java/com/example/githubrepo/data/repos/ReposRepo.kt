@@ -18,4 +18,6 @@ interface ReposRepo {
         authorName: String
     ): Flow<DataStatus<List<IssueResponse>>>
 
+    suspend fun getSearchedRepos(text : String): Flow<DataStatus<List<RepoResponse>>>
+
 }

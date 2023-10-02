@@ -2,6 +2,7 @@ package com.example.githubrepo.data.remote
 
 import com.example.githubrepo.data.models.IssueResponse
 import com.example.githubrepo.data.models.RepoResponse
+import com.example.githubrepo.data.models.SearchResponse
 import com.example.githubrepo.data.models.SingleRepoInfo
 import com.example.githubrepo.data.remote.network.ReposApiService
 import retrofit2.Response
@@ -25,5 +26,9 @@ class ReposRemoteDataSource @Inject constructor(private val reposApiService: Rep
         authorName: String
     ): Response<List<IssueResponse>> {
         return reposApiService.getRepoIssues(repoName, authorName)
+    }
+
+    override suspend fun getSearchedRepos(text: String): Response<SearchResponse> {
+        return reposApiService.getSearchedRepos(text)
     }
 }
