@@ -15,7 +15,6 @@ import javax.inject.Inject
 class ReposRepoImpl @Inject constructor(private val remoteDataSource: RemoteDataSource) :
     ReposRepo {
     override suspend fun getAllRepos(): Flow<DataStatus<List<RepoResponse>>> {
-
         return flow {
             emit(DataStatus.loading())
             val response = remoteDataSource.getAllRepos()

@@ -20,7 +20,6 @@ class MainViewModel @Inject constructor(private val reposRepo: ReposRepo) : View
     val state = mutableStateOf<DataStatus<List<RepoResponse>>>(DataStatus.loading())
     var searchTextState by mutableStateOf("")
 
-
     init {
         getRepoList()
     }
@@ -42,24 +41,23 @@ class MainViewModel @Inject constructor(private val reposRepo: ReposRepo) : View
     }
 
     fun onSearchRepos(text: String) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                reposRepo.getSearchedRepos(text).collect {
-                    withContext(Dispatchers.Main) {
-                        state.value = it
+        if (text.isNotEmpty()) {
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    reposRepo.getSearchedRepos(text).collect {
+                        withContext(Dispatchers.Main) {
+                            state.value = it
+                        }
                     }
                 }
             }
         }
     }
 
-    fun passErrorToState(string: String) {
-        state.value = DataStatus.error(string)
-    }
-
     fun onClearSearch() {
-        searchTextState = ""
-        getRepoList()
+        if (searchTextState.isNotEmpty()) {
+            searchTextState = ""
+            getRepoList()
+        }
     }
-
 }

@@ -38,23 +38,19 @@ fun SearchAppBar(
     text: String,
     onTextChange: (String) -> Unit,
     onSearchClicked: (String) -> Unit,
-    onCloseSearch: () -> Unit
+    onCloseSearch: () -> Unit,
+    modifier: Modifier
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     Row(
         horizontalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(60.dp)
-            .background(MaterialTheme.colorScheme.secondary, shape = CircleShape)
-            .padding(horizontal = 10.dp)
+        modifier = modifier
     ) {
         TextField(
             value = text,
+            modifier = Modifier.fillMaxWidth(),
             onValueChange = onTextChange,
             textStyle = MaterialTheme.typography.displayLarge,
-            modifier = Modifier
-                .fillMaxWidth(),
             placeholder = {
                 Text(
                     text = stringResource(id = R.string.search_hint),
@@ -108,5 +104,14 @@ fun SearchAppBar(
 @Preview
 @Composable
 fun PreviewSearchApp() {
-    SearchAppBar(text = "", onTextChange = {}, onSearchClicked = {}) {}
+    SearchAppBar(
+        text = "",
+        onTextChange = {},
+        onSearchClicked = {},
+        onCloseSearch = {},
+        modifier = Modifier
+            .height(60.dp)
+            .background(MaterialTheme.colorScheme.secondary, shape = CircleShape)
+            .padding(horizontal = 10.dp)
+    )
 }

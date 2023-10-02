@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -35,12 +36,23 @@ fun ReposList(
     data: List<RepoResponse>,
     onItemSelect: (String?, String?) -> Unit
 ) {
-    LazyColumn(modifier = Modifier.padding(top = 4.dp)) {
-        items(data.size) { index ->
-            SingleRepoItem(data[index], onItemSelect)
-            Divider(Modifier.padding(vertical = 8.dp))
+    if (data.isNotEmpty()) {
+        LazyColumn(modifier = Modifier.padding(top = 4.dp)) {
+            items(data.size) { index ->
+                SingleRepoItem(data[index], onItemSelect)
+                Divider(Modifier.padding(vertical = 8.dp))
+            }
+        }
+    } else {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(stringResource(id = R.string.empty_data))
         }
     }
+
 }
 
 @Composable
